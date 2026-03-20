@@ -15,14 +15,21 @@
 <body>
 
   <h1>URL Shortener</h1>
+  <nav style="margin-bottom: 20px;">
+    <a href="/login" style="margin-right: 10px;">Login</a>
+    <a href="/signup">Signup</a>
+  </nav>
 
   <% if (id) { %>
-    <p>
-      URL Generated:
-      <a href="http://localhost:8001/url/<%= id %>" target="_blank">
-  http://localhost:8001/url/<%= id %>
-</a>
-    </p>
+    <div style="background-color: #f0f0f0; padding: 10px; margin-bottom: 20px; border-radius: 5px;">
+      <p><strong>✓ URL Generated Successfully!</strong></p>
+      <p>
+        Short URL:
+        <a href="http://localhost:8001/url/<%= id %>" target="_blank" style="font-weight: bold; color: blue;">
+          http://localhost:8001/url/<%= id %>
+        </a>
+      </p>
+    </div>
   <% } %>
 
   <div>

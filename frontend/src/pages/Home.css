@@ -1,0 +1,251 @@
+.url-form {
+  display: flex;
+  gap: 15px;
+  margin: 30px 0;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.form-group {
+  flex: 1;
+  min-width: 300px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  font-family: inherit;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.btn {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background: #f0f0f0;
+  color: #333;
+  border: 2px solid #ddd;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #e7e7e7;
+  border-color: #667eea;
+}
+
+.generated-url-box {
+  background: #f0f8ff;
+  border-left: 4px solid #667eea;
+  padding: 20px;
+  border-radius: 5px;
+  margin: 20px 0;
+}
+
+.generated-url-box p {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.short-url-display {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.short-url-input {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid #667eea;
+  border-radius: 5px;
+  background: white;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.urls-section {
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 2px solid #eee;
+}
+
+.urls-section h2 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.urls-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.urls-table thead {
+  background: #f8f9fa;
+}
+
+.urls-table th {
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #555;
+  border-bottom: 2px solid #ddd;
+}
+
+.urls-table td {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.urls-table tr:hover {
+  background: #f8f9fa;
+}
+
+.short-id {
+  background: #e8eaf6;
+  color: #667eea;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-weight: 600;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.url-cell a {
+  color: #667eea;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.url-cell a:hover {
+  text-decoration: underline;
+}
+
+.clicks-badge {
+  background: #fff3cd;
+  color: #856404;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-small {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  background: white;
+  border: 1px solid #ddd;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-small:hover {
+  background: #f5f5f5;
+  border-color: #667eea;
+  transform: scale(1.1);
+}
+
+.info-box {
+  background: #e8f4f8;
+  border-left: 4px solid #17a2b8;
+  padding: 15px;
+  border-radius: 5px;
+  margin-top: 30px;
+  color: #0c5460;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+  .url-form {
+    flex-direction: column;
+  }
+
+  .form-group {
+    min-width: 100%;
+  }
+
+  .short-url-display {
+    flex-direction: column;
+  }
+
+  .urls-table {
+    font-size: 14px;
+  }
+
+  .urls-table th,
+  .urls-table td {
+    padding: 10px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body{
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+</head>
+<body>
+    <h1>Signup</h1>
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div style="color: red; margin-bottom: 10px;"><strong>Error:</strong> <%= error %></div>
+    <% } %>
+    <form action="/user" method="post">
+        <label>Full Name</label>
+            <input type="text" required name="name" placeholder="Enter your full name"/>
+       <label>Email</label>
+       <input type="email" required name="email" placeholder="Enter your email"/>
+       <label>Password</label>
+       <input type="password" required name="password" placeholder="Enter password (min 6 chars)">
+       <button type="Submit">Signup</button>
+    </form>
+    <p>Already have an account? <a href="/login">Login here</a></p>
+</body>
+</html>
