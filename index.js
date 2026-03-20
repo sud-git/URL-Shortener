@@ -70,7 +70,11 @@ app.get('/url/:shortId', async (req, res) => {
 });
 
 // Serve React app for all non-API routes
-app.get('*', (req, res) => {
+app.use((req, res, next) => {
+  // Check if request is for an API route
+  if (req.path.startsWith('/url') || req.path.startsWith('/user')) {
+    return next();
+  }
   res.sendFile(path.join(__dirname, 'frontend/build/index.html'));
 });
 
