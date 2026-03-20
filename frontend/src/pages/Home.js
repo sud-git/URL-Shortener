@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Home.css';
 
-const API_URL = 'http://localhost:8001';
+const API_URL = 'http://localhost:8000';
 
 function Home({ isAuthenticated }) {
   const [urls, setUrls] = useState([]);
@@ -48,7 +48,7 @@ function Home({ isAuthenticated }) {
   };
 
   const copyToClipboard = (text) => {
-    navigator.clipboard.writeText(`http://localhost:8001/url/${text}`);
+    navigator.clipboard.writeText(`http://localhost:8000/url/${text}`);
     setCopySuccess('Copied!');
     setTimeout(() => setCopySuccess(''), 2000);
   };

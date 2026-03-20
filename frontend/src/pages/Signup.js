@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import './Auth.css';
 
-const API_URL = 'http://localhost:8001';
+const API_URL = 'http://localhost:8000';
 
 function Signup({ onSuccess }) {
   const [formData, setFormData] = useState({

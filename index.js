@@ -8,7 +8,7 @@ const staticRoute = require('./routes/staticRouter');
 const userRoute = require('./routes/user');
 
 const app = express();
-const PORT = 8001;
+const PORT = 8000;
 
 // Connect to MongoDB
 connectToMongoDB("mongodb://localhost:27017/short-url")
@@ -24,9 +24,12 @@ connectToMongoDB("mongodb://localhost:27017/short-url")
 app.set("view engine", "ejs");
 app.set("views", path.resolve("./views"));
 
+// Serve static files from React build
+app.use(express.static(path.join(__dirname, 'frontend/build')));
+
 // CORS Middleware
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.header('Access-Control-Allow-Credentials', 'true');
@@ -66,9 +69,9 @@ app.get('/url/:shortId', async (req, res) => {
   }
 });
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ error: "Route not found" });
+// Serve React app for all non-API routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/build/index.html'));
 });
 
 // Global error handler
