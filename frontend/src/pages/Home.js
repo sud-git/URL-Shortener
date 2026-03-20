@@ -10,7 +10,7 @@ function Home({ isAuthenticated }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [generatedShortId, setGeneratedShortId] = useState('');
+  const [copySuccess, setCopySuccess] = useState('');
 
   useEffect(() => {
     fetchUrls();
@@ -47,11 +47,17 @@ function Home({ isAuthenticated }) {
     }
   };
 
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(`http://localhost:8001/url/${text}`);
+    setCopySuccess('Copied!');
+    setTimeout(() => setCopySuccess(''), 2000);
+  };
+
   const handleGenerateURL = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
-    setGeneratedShortId('');
+    setCopySuccess('');
 
     if (!urlInput.trim()) {
       setError('Please enter a URL');
@@ -68,171 +74,117 @@ function Home({ isAuthenticated }) {
       const formData = new URLSearchParams();
       formData.append('url', urlInput);
 
-      const response = await axios.post(`${API_URL}/url`, formData, {
+      await axios.post(`${API_URL}/url`, formData, {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        maxRedirects: 0
       });
 
-      // Extract the short ID from the redirect URL
-      const urlParams = new URL(response.request.responseURL).searchParams;
-      const shortId = urlParams.get('id');
-      
-      setGeneratedShortId(shortId);
-      setSuccess('URL shortened successfully!');
+      setSuccess('✓ URL shortened successfully!');
       setUrlInput('');
       
       setTimeout(() => {
         fetchUrls();
       }, 500);
     } catch (err) {
-      if (err.response?.status === 302 || err.response?.status === 301) {
-        setSuccess('URL shortened successfully!');
-        setUrlInput('');
-        setTimeout(() => {
-          fetchUrls();
-        }, 500);
-      } else {
-        setError(err.response?.data?.error || 'Failed to shorten URL');
-      }
+      setError(err.response?.data?.error || 'Failed to shorten URL');
     } finally {
       setLoading(false);
     }
   };
 
-  const copyToClipboard = (shortId) => {
-    const shortUrl = `http://localhost:8001/url/${shortId}`;
-    navigator.clipboard.writeText(shortUrl);
-    setSuccess('Short URL copied to clipboard!');
-    setTimeout(() => setSuccess(''), 3000);
-  };
-
-  const getAnalytics = async (shortId) => {
-    try {
-      const response = await axios.get(`${API_URL}/url/analytics/${shortId}`);
-      alert(`Analytics for ${shortId}:\nTotal Clicks: ${response.data.totalClicks}`);
-    } catch (err) {
-      setError('Failed to fetch analytics');
-    }
-  };
-
   return (
-    <div className="container">
-      <div className="card">
-        <h1>🔗 URL Shortener</h1>
-        <p className="subtitle">Shorten your long URLs into concise, easy-to-share links</p>
+    <div className="home-container">
+      <div className="home-content">
+        <div className="header-section">
+          <h1>🔗 URL Shortener</h1>
+          <p>Transform long URLs into short, shareable links instantly</p>
+        </div>
 
-        {error && <div className="error-message">{error}</div>}
-        {success && <div className="success-message">{success}</div>}
+        <div className="main-section">
+          <div className="shortener-card">
+            <h2>Create Short URL</h2>
+            
+            {error && <div className="alert alert-error">{error}</div>}
+            {success && <div className="alert alert-success">{success}</div>}
 
-        <form onSubmit={handleGenerateURL} className="url-form">
-          <div className="form-group">
-            <label htmlFor="url">Enter Your URL</label>
-            <input
-              type="url"
-              id="url"
-              placeholder="https://example.com/very/long/url"
-              value={urlInput}
-              onChange={(e) => setUrlInput(e.target.value)}
-              disabled={loading}
-              required
-            />
+            <form onSubmit={handleGenerateURL} className="url-form">
+              <div className="input-group">
+                <input
+                  type="text"
+                  placeholder="https://example.com/very/long/url"
+                  value={urlInput}
+                  onChange={(e) => setUrlInput(e.target.value)}
+                  disabled={loading}
+                  className="url-input"
+                />
+                <button 
+                  type="submit" 
+                  disabled={loading}
+                  className="btn btn-primary"
+                >
+                  {loading ? 'Processing...' : 'Shorten URL'}
+                </button>
+              </div>
+            </form>
           </div>
-          <button type="submit" disabled={loading} className="btn btn-primary">
-            {loading ? 'Generating...' : 'Generate Short URL'}
-          </button>
-        </form>
 
-        {generatedShortId && (
-          <div className="generated-url-box">
-            <p>
-              <strong>✓ Your Short URL:</strong>
-            </p>
-            <div className="short-url-display">
-              <input 
-                type="text" 
-                value={`http://localhost:8001/url/${generatedShortId}`}
-                readOnly
-                className="short-url-input"
-              />
-              <button 
-                onClick={() => copyToClipboard(generatedShortId)}
-                className="btn btn-secondary"
-              >
-                📋 Copy
-              </button>
-            </div>
-          </div>
-        )}
-
-        {urls.length > 0 && (
-          <div className="urls-section">
-            <h2>Recent URLs</h2>
-            <div className="table-wrapper">
-              <table className="urls-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Short ID</th>
-                    <th>Original URL</th>
-                    <th>Clicks</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {urls.map((url, index) => (
-                    <tr key={index}>
-                      <td>{index + 1}</td>
-                      <td>
-                        <span className="short-id">{url.shortId}</span>
-                      </td>
-                      <td className="url-cell">
-                        <a href={url.redirectURL} target="_blank" rel="noopener noreferrer">
-                          {url.redirectURL.length > 50 ? url.redirectURL.substring(0, 50) + '...' : url.redirectURL}
+          {urls.length > 0 && (
+            <div className="urls-section">
+              <h2>Your Shortened URLs</h2>
+              <div className="urls-grid">
+                {urls.map((url, index) => (
+                  <div key={index} className="url-card">
+                    <div className="url-card-content">
+                      <div className="short-url">
+                        <span className="label">Short URL:</span>
+                        <a 
+                          href={`${API_URL}/url/${url.shortId}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="short-link"
+                        >
+                          {url.shortId}
                         </a>
-                      </td>
-                      <td>
-                        <span className="clicks-badge">{url.clicks}</span>
-                      </td>
-                      <td>
-                        <div className="action-buttons">
-                          <button 
-                            onClick={() => copyToClipboard(url.shortId)}
-                            className="btn-small btn-copy"
-                            title="Copy short URL"
-                          >
-                            📋
-                          </button>
-                          <button 
-                            onClick={() => getAnalytics(url.shortId)}
-                            className="btn-small btn-analytics"
-                            title="View analytics"
-                          >
-                            📊
-                          </button>
-                          <a 
-                            href={`http://localhost:8001/url/${url.shortId}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn-small btn-visit"
-                            title="Visit short URL"
-                          >
-                            🔗
-                          </a>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                        <button
+                          onClick={() => copyToClipboard(url.shortId)}
+                          className="btn-copy"
+                          title="Copy to clipboard"
+                        >
+                          📋
+                        </button>
+                      </div>
+                      
+                      <div className="original-url">
+                        <span className="label">Original URL:</span>
+                        <a 
+                          href={url.redirectURL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="original-link"
+                          title={url.redirectURL}
+                        >
+                          {url.redirectURL.length > 50 
+                            ? url.redirectURL.substring(0, 50) + '...'
+                            : url.redirectURL}
+                        </a>
+                      </div>
+                      
+                      <div className="clicks-info">
+                        <span className="clicks-count">{url.clicks}</span>
+                        <span className="clicks-label">Clicks</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {!isAuthenticated && (
-          <div className="info-box">
-            <p>📝 <strong>Tip:</strong> Sign up or login to save and track your URLs!</p>
-          </div>
-        )}
+          {urls.length === 0 && !success && (
+            <div className="empty-state">
+              <p>No URLs shortened yet. Create your first short URL above!</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
